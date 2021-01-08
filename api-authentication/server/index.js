@@ -48,17 +48,14 @@ app.post("/api/auth/sign-in", (req, res, next) => {
 
   /* your code starts here */
 
-  argon2
-    .hash(password)
-    .then((hashedPassword) => {
-      const sql = `
+  const sql = `
       select "userId", "hashedPassword"
       from   "users"
       where "username" = $1;
     `;
-      const params = [username];
-      return db.query(sql, params);
-    })
+  const params = [username];
+  return db
+    .query(sql, params)
     .then((result) => {
       const userInfo = result.rows[0];
       if (!userInfo) {
