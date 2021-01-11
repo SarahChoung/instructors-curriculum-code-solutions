@@ -15,11 +15,8 @@ export default class App extends React.Component {
 
   componentDidMount() {
     window.addEventListener('hashchange', () => {
-      const currentHash = this.state.route;
-      if (parseRoute(window.location.hash) !== currentHash) {
-        const newRoute = parseRoute(window.location.hash);
-        this.setState({ route: newRoute });
-      }
+      const route = parseRoute(window.location.hash);
+      this.setState({ route });
     });
     /**
      * Listen for hash change events on the window object
