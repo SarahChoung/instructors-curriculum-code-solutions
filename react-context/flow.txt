@@ -1,0 +1,35 @@
+User can sign up:
+1. When user clicks the "Register" button on the auth form, handleSubmit gets called
+2. const action (sign-up) gets destructured from "this.props" and a fetch request gets sent to 'api/auth/sign-up' with the username and password from state being sent in the body
+3. in sever/index.js, the username and password get destructured from req.body
+4. if the username or password does not exist, a 400 error gets thrown with the message 'username and password are required fields'
+5. if the username and password do exist, the hash method of the argon2 method gets called with an argument of password
+6. then, the username and password get inserted into the "users" table with a sql query and returns the userId, username, and createdAt
+7. then the return value of the previous step gets stored into const user which then gets sent back to the client with a 201 status
+8. if there is an error, it gets passed to the errorMiddleware
+9. back on the front end, the window.location.hash gets changed to 'sign-in' and App returns the Auth component with the route 'sign-in'
+
+User can sign in:
+1. When user clicks "Sign in" or "Log in" button on the auth form, handleSubmit gets called
+2. const action (sign-up) gets destructured from "this.props" and a fetch request gets sent to 'api/auth/sign-in' with the username and password from state being sent in the body
+3. in sever/index.js, the username and password get destructured from req.body
+4. if the username or password does not exist, a 401 error gets thrown with the message 'invalid login'
+5. if the username and password do exist, a sql query gets sent that selects and returns the userId and hashedPassword from the users table where the username equals the username provided from the req.body
+6. then, if there is no user, a 401 ClientError gets thrown with the message 'invalid login'. If there is a user, the userId and hashedPassword get destructured and the verify method of the argon2 object get called with arguments hashedPassword (which was provided from the sql query) and the password that was provided from the request
+7. then, if the hashedPassword and password provided don't match, a new ClientError with a status of 401 and message of 'invalid login' get thrown
+8. the hashedPassword and password do match, the userId and username get assigned to const payload
+9. the sign method of the jwt object gets called with the arguments of payload and process.env.TOKEN_SECRET
+10. the token and payload get send back to the client
+8. if there is an error, it gets passed to the errorMiddleware
+11. back on the front end, if the user and token properties of the result object exist, the onSignIn function from props gets called with result passed in as an argument which sets the token onto localStorage and calls setState with the user data
+12. Because a user exists in AppContext, the AuthPage redirects to Home page
+
+User can stay signed in (even if they refresh the page):
+1. When user signs in, the user's token gets stored on the localStorage property of the window object
+2. If the user refreshes the page, componentDidMount will get the token from localStorage, and then the decoded token will be assigned to const user and then setState will be called with the arguments of user and isAuthorizing:false
+3. The user information gets stored in context and because the user exists from the previous setState step, the Home component does not redirect to the sign in page and the user can see the iframe
+
+User can sign out:
+1. When the user clicks the sign out button, the handleSignOut function gets called, which is provided from the AppContext
+2. handleSignOut removes the react-context-jwt token from localsStorage and setState gets called, assigning null to the user property
+3. In the Home component, because user is null in AppContext, the user gets redirected to the sign-in page
