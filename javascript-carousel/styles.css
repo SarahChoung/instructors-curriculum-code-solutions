@@ -1,6 +1,6 @@
 .carousel-container {
   margin: 50px auto;
-  height: 60vh;
+  height: 80vh;
   width: 90vw;
   border: 5px solid black;
   position: relative;
@@ -32,6 +32,10 @@
   border-radius: 50%;
   border: 2px solid black;
   margin: 0 2px;
+}
+
+.circle:hover {
+  cursor: pointer;
 }
 
 .circle.active {

@@ -11,7 +11,7 @@ class Carousel {
     this.fillCircle = this.fillCircle.bind(this);
     this.carouselImages = null;
     this.circles = null;
-
+    this.timer = setInterval(this.goRight, 3000);
   }
 
   goLeft() {
@@ -32,13 +32,25 @@ class Carousel {
     this.fillCircle();
   }
 
+  goToSlide(index) {
+    this.currentIndex = index;
+    this.carouselImages.forEach(item => {
+      item.style.transform = `translateX(-${index * 100}%)`;
+    });
+    this.fillCircle();
+  }
+
   renderArrow(iconClass, side, onClickFunction) {
     const button = document.createElement('button');
     const icon = document.createElement('i');
     icon.className = `icon ${iconClass}`;
     button.appendChild(icon);
     button.setAttribute('id', side);
-    button.addEventListener('click', onClickFunction);
+    button.addEventListener('click', () => {
+      clearInterval(this.timer);
+      onClickFunction();
+      this.timer = setInterval(this.goRight, 3000);
+    });
     return button;
   }
 
@@ -57,6 +69,11 @@ class Carousel {
     images.forEach((imageLink, index) => {
       const circle = document.createElement('div');
       circle.className = index === this.currentIndex ? 'circle active' : 'circle';
+      circle.addEventListener('click', () => {
+        clearInterval(this.timer);
+        this.goToSlide(index);
+        this.timer = setInterval(this.goRight, 3000);
+      });
       circleContainer.appendChild(circle);
     });
     container.appendChild(circleContainer);
@@ -84,11 +101,12 @@ class Carousel {
     carouselContainer.append(leftArrow, rightArrow);
 
     document.querySelector('body').appendChild(carouselContainer);
+
     const carouselImages = document.querySelectorAll('.carousel-image');
     this.carouselImages = carouselImages;
-
     const circles = document.querySelectorAll('.circle');
     this.circles = circles;
+
   }
 }
 
