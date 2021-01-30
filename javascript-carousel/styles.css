@@ -1,0 +1,39 @@
+.carousel-container {
+  margin: 50px auto;
+  height: 50vh;
+  width: 90vw;
+  border: 5px solid black;
+  position: relative;
+  display: flex;
+  overflow: hidden;
+}
+
+.carousel-image {
+  min-width: 100%;
+  object-fit: contain;
+  transition: transform 1s;
+}
+
+button {
+  background-color: transparent;
+  border: none;
+  height: 100%;
+  position: absolute;
+  width: 10%;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+.icon {
+  width: 10%;
+}
+
+#left-arrow {
+  left: 0;
+}
+
+#right-arrow {
+  right: 0;
+}
